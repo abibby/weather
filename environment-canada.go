@@ -2,11 +2,10 @@ package main
 
 import (
 	"encoding/xml"
+	"fmt"
 	"net/http"
-	"os"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"golang.org/x/net/html/charset"
 )
 
@@ -28,6 +27,26 @@ func (dt DateTime) Time() time.Time {
 		panic(err)
 	}
 	return time.Date(d.Year, d.Month, d.Day, d.Hour, d.Minute, 0, 0, l)
+}
+
+type Unit struct {
+	Type  string  `xml:"unitType,attr"`
+	Units string  `xml:"units,attr"`
+	Class string  `xml:"class,attr"`
+	Value float64 `xml:",innerxml"`
+}
+
+func (u *Unit) Float64() float64 {
+	return u.Value
+}
+
+func (u *Unit) String() string {
+	switch u.Units {
+	case "C":
+		return fmt.Sprintf("%0.0f°C", u.Value)
+	default:
+		return fmt.Sprintf("%f %s", u.Value, u.Units)
+	}
 }
 
 type Location struct {
@@ -54,11 +73,11 @@ type Conditions struct {
 	ObservationTime  DateTime `xml:"dateTime"`
 	Condition        string   `xml:"condition"`
 	IconCode         int      `xml:"iconCode"`
-	Temperature      float64  `xml:"temperature"`
-	Dewpoint         float64  `xml:"dewpoint"`
-	WindChill        float64  `xml:"windChill"`
-	Pressure         float64  `xml:"pressure"`
-	Visibility       float64  `xml:"visibility"`
+	Temperature      Unit     `xml:"temperature"`
+	Dewpoint         Unit     `xml:"dewpoint"`
+	WindChill        Unit     `xml:"windChill"`
+	Pressure         Unit     `xml:"pressure"`
+	Visibility       Unit     `xml:"visibility"`
 	RelativeHumidity float64  `xml:"relativeHumidity"`
 	Wind             Wind     `xml:"wind"`
 }
@@ -107,7 +126,7 @@ func Load() (*Weather, error) {
 	}
 	responce.Body.Close()
 	// fmt.Printf("%#v", w.CurrentConditions.Wind)
-	spew.Dump(w.ForecastGroup.Forcast)
-	os.Exit(1)
+	// spew.Dump(w.ForecastGroup.Forcast)
+	// os.Exit(1)
 	return w, nil
 }

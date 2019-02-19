@@ -3,10 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strings"
-
-	"github.com/davecgh/go-spew/spew"
-	"github.com/mmcdole/gofeed"
 )
 
 func check(err error) {
@@ -19,22 +15,25 @@ func check(err error) {
 func main() {
 	w, err := Load()
 	check(err)
-	spew.Dump(w)
-	spew.Dump(w.DateCreated.Time())
-	// http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000571_e.xml
-	feed, err := gofeed.NewParser().ParseURL("https://weather.gc.ca/rss/city/on-5_e.xml")
-	check(err)
 
-	currentTemp := ""
-	forecasts := []string{}
-	for _, item := range feed.Items {
-		if item.Categories[0] == "Current Conditions" {
-			currentTemp = strings.Split(item.Title, ": ")[1]
-		}
+	fmt.Printf("%s, %v\n",
+		w.ForecastGroup.Forcast[0].AbbreviatedForecast.Summary,
+		w.CurrentConditions.Temperature.String())
 
-		if item.Categories[0] == "Weather Forecasts" {
-			forecasts = append(forecasts, strings.Split(item.Title, ": ")[1])
-		}
-	}
-	fmt.Printf("%s Currently %s\n", forecasts[0], currentTemp)
+	// // http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000571_e.xml
+	// feed, err := gofeed.NewParser().ParseURL("https://weather.gc.ca/rss/city/on-5_e.xml")
+	// check(err)
+
+	// currentTemp := ""
+	// forecasts := []string{}
+	// for _, item := range feed.Items {
+	// 	if item.Categories[0] == "Current Conditions" {
+	// 		currentTemp = strings.Split(item.Title, ": ")[1]
+	// 	}
+
+	// 	if item.Categories[0] == "Weather Forecasts" {
+	// 		forecasts = append(forecasts, strings.Split(item.Title, ": ")[1])
+	// 	}
+	// }
+	// fmt.Printf("%s Currently %s\n", forecasts[0], currentTemp)
 }
