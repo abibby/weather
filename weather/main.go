@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+
+	"github.com/zwzn/weather"
 )
 
 func check(err error) {
@@ -13,7 +15,7 @@ func check(err error) {
 }
 
 func main() {
-	w, err := Load()
+	w, err := weather.Load()
 	check(err)
 
 	fmt.Printf("%s, %v\n",

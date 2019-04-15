@@ -1,9 +1,10 @@
-package main
+package weather
 
 import (
 	"encoding/xml"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	"golang.org/x/net/html/charset"
@@ -30,22 +31,23 @@ func (dt DateTime) Time() time.Time {
 }
 
 type Unit struct {
-	Type  string  `xml:"unitType,attr"`
-	Units string  `xml:"units,attr"`
-	Class string  `xml:"class,attr"`
-	Value float64 `xml:",innerxml"`
+	Type  string `xml:"unitType,attr"`
+	Units string `xml:"units,attr"`
+	Class string `xml:"class,attr"`
+	Value string `xml:",innerxml"`
 }
 
 func (u *Unit) Float64() float64 {
-	return u.Value
+	f, _ := strconv.ParseFloat(u.Value, 64)
+	return f
 }
 
 func (u *Unit) String() string {
 	switch u.Units {
 	case "C":
-		return fmt.Sprintf("%0.0f°C", u.Value)
+		return fmt.Sprintf("%0.0f°C", u.Float64())
 	default:
-		return fmt.Sprintf("%f %s", u.Value, u.Units)
+		return fmt.Sprintf("%0.1f %s", u.Float64(), u.Units)
 	}
 }
 
@@ -125,7 +127,7 @@ func Load() (*Weather, error) {
 		return nil, err
 	}
 	responce.Body.Close()
-	// fmt.Printf("%#v", w.CurrentConditions.Wind)
+	// fmt.Printf("%+v", w)
 	// spew.Dump(w.ForecastGroup.Forcast)
 	// os.Exit(1)
 	return w, nil
