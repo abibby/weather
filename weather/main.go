@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/zwzn/weather"
+	"github.com/abibby/weather"
 )
 
 func check(err error) {
