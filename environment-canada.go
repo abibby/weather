@@ -43,12 +43,16 @@ func (u *Unit) Float64() float64 {
 }
 
 func (u *Unit) String() string {
+	unit := " " + u.Units
 	switch u.Units {
 	case "C":
-		return fmt.Sprintf("%0.0f°C", u.Float64())
-	default:
-		return fmt.Sprintf("%0.1f %s", u.Float64(), u.Units)
+		unit = "°C"
 	}
+	switch u.Type {
+	case "metric":
+		unit = "°C"
+	}
+	return fmt.Sprintf("%0.0f%s", u.Float64(), unit)
 }
 
 type Location struct {
@@ -121,13 +125,16 @@ func Load() (*Weather, error) {
 		return nil, err
 	}
 	w := &Weather{}
+	defer responce.Body.Close()
+
+	// io.Copy(os.Stdout, responce.Body)
+	// os.Exit(1)
 	decoder := xml.NewDecoder(responce.Body)
 	decoder.CharsetReader = charset.NewReaderLabel
 	err = decoder.Decode(w)
 	if err != nil {
 		return nil, err
 	}
-	responce.Body.Close()
 	// fmt.Printf("%+v", w)
 	// spew.Dump(w.ForecastGroup.Forcast)
 	// os.Exit(1)
