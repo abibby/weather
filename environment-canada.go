@@ -78,6 +78,7 @@ type Conditions struct {
 	Temperature      Unit     `xml:"temperature"`
 	Dewpoint         Unit     `xml:"dewpoint"`
 	WindChill        Unit     `xml:"windChill"`
+	Humidex          Unit     `xml:"humidex"`
 	Pressure         Unit     `xml:"pressure"`
 	Visibility       Unit     `xml:"visibility"`
 	RelativeHumidity float64  `xml:"relativeHumidity"`
