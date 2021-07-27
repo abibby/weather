@@ -18,9 +18,12 @@ func main() {
 	w, err := weather.Load()
 	check(err)
 
+	// fmt.Printf("%#v\n", w.ForecastGroup.Forcast[0])
+	// os.Exit(1)
+
 	fmt.Printf("%s, %s\n",
 		w.ForecastGroup.Forcast[0].AbbreviatedForecast.Summary,
-		w.CurrentConditions.Humidex.String())
+		w.ForecastGroup.Forcast[0].Humidex.String())
 
 	// // http://dd.weather.gc.ca/citypage_weather/xml/ON/s0000571_e.xml
 	// feed, err := gofeed.NewParser().ParseURL("https://weather.gc.ca/rss/city/on-5_e.xml")

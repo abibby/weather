@@ -99,6 +99,9 @@ type Forecast struct {
 	Period              string              `xml:"Period"`
 	Summarty            string              `xml:"textSummary"`
 	AbbreviatedForecast AbbreviatedForecast `xml:"abbreviatedForecast"`
+	CloudPrecipitation  string              `xml:"cloudPrecip>textSummary"`
+	Temperature         Unit                `xml:"temperatures>temperature"`
+	Humidex             Unit                `xml:"humidex>calculated"`
 }
 
 type ForecastGroup struct {
